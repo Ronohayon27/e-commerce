@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Header = () => {
   return (
@@ -26,14 +27,30 @@ const Header = () => {
       <NavigationMenu>
         <NavigationMenuList className="flex gap-12 mr-10">
           <NavigationMenuItem>
-            <NavigationMenuLink href="/signup">Signup</NavigationMenuLink>
+            <NavigationMenuLink asChild>
+              <Link href="/products">Products</Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuLink href="/login">Login</NavigationMenuLink>
+            <NavigationMenuLink asChild>
+              <Link href="/signup">Signup</Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuLink href="/cart">
-              <ShoppingCart />
+            <NavigationMenuLink asChild>
+              <Link href="/login">Login</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link href="/cart">
+                <ShoppingCart />
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link href="/profile">Profile</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
