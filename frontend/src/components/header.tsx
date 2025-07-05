@@ -33,11 +33,6 @@ const Header = () => {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/signup">Signup</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
               <Link href="/login">Login</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>

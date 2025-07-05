@@ -27,7 +27,3 @@ export function generateMockProduct(): MockProduct {
     rating: parseFloat((Math.random() * 5).toFixed(1)),
   };
 }
-
-export function generateMockProducts(count = 10): MockProduct[] {
-  return Array.from({ length: count }, generateMockProduct);
-}
