@@ -3,8 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import logger from "./utils/logger";
+import productRoutes from "./routes/productRoutes";
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const app = express();
 
@@ -21,9 +22,6 @@ app.use(
   })
 );
 
-app.get("/", (_req, res) => {
-  logger.info("Root route hit");
-  res.send("E-commerce backend running");
-});
+app.use("/api/v1/products", productRoutes);
 
 export default app;
