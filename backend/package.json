@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
+    "build": "npx tsc",
+    "start": "node -r tsconfig-paths/register dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +20,10 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "pino": "^9.7.0",
-    "pino-pretty": "^13.0.0"
+    "pino-pretty": "^13.0.0",
+    "strip-bom": "^5.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
