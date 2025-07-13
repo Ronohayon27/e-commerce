@@ -3,7 +3,7 @@ import {
   getAllProducts,
   getProductByID,
 } from "../controllers/productController";
-import { validateIdParam } from "../middlewares/validateIdParam";
+import { validateIdParam } from "../middlewares/validationMiddleware";
 
 const router = Router();
 

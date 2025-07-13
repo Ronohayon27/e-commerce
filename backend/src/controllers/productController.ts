@@ -10,6 +10,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
     res.status(200).json(products);
     logger.info("products fetched successfully");
   } catch (error) {
+    logger.error("Error fetching products:", error);
     res.status(500).json({ message: "failed to fetch products" });
   }
 };
