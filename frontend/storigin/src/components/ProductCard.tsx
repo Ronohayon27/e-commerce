@@ -26,7 +26,7 @@ const ProductCard: React.FC<{ product: MockProduct }> = ({ product }) => {
   const [isFavorited, setIsFavorited] = useState(false);
 
   return (
-    <Card className="relative flex flex-col justify-between h-full rounded-2xl shadow-md border transition-all duration-300 group hover:scale-[1.015] transition-transform duration-300 ">
+    <Card className="relative flex flex-col justify-between h-full rounded-2xl shadow-md border transition-transform duration-300">
       {/* Heart Button (not affected by hover scaling) */}
       <motion.button
         whileHover={{ scale: 1.15 }}

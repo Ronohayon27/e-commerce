@@ -37,62 +37,65 @@ export function HeroSection() {
 
   return (
     <div className="w-full max-w-6xl mx-auto">
-      <Carousel setApi={setApi} className="w-full" plugins={[autoplay]}>
-        <CarouselContent>
-          {heroData.map((item, index) => (
-            <CarouselItem key={index} className="w-full">
-              <Card className="bg-muted shadow-lg rounded-xl">
-                <CardContent className="flex flex-col-reverse md:flex-row items-center justify-between p-8 gap-6 md:h-[28rem]">
-                  {/* TEXT SECTION */}
-                  <div className="w-full md:w-1/2 text-center md:text-left space-y-4">
-                    <h1 className="text-4xl font-bold leading-tight">
-                      {item.title}
-                    </h1>
-                    <p className="text-muted-foreground text-lg">
-                      {item.subtitle}
-                    </p>
-                    <Button variant="default" className="mt-4">
-                      Buy Now
-                    </Button>
-                  </div>
+      <div className="relative">
+        <Carousel setApi={setApi} className="w-full" plugins={[autoplay]}>
+          <div className="rounded-xl overflow-hidden">
+            <CarouselContent>
+              {heroData.map((item, index) => (
+                <CarouselItem key={index} className="w-full">
+                  <Card className="bg-muted shadow-lg rounded-xl">
+                    <CardContent className="flex flex-col-reverse md:flex-row items-center justify-between p-8 gap-6 md:h-[28rem]">
+                      {/* TEXT */}
+                      <div className="w-full md:w-1/2 text-center md:text-left space-y-4">
+                        <h1 className="text-4xl font-bold leading-tight">
+                          {item.title}
+                        </h1>
+                        <p className="text-muted-foreground text-lg">
+                          {item.subtitle}
+                        </p>
+                        <Button variant="default" className="mt-4">
+                          Buy Now
+                        </Button>
+                      </div>
 
-                  {/* IMAGE SECTION */}
-                  <div className="w-full md:w-1/2 flex justify-center">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      width={600}
-                      height={400}
-                      className="w-full max-w-md object-contain"
-                      priority
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+                      {/* IMAGE */}
+                      <div className="w-full md:w-1/2 flex justify-center">
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          width={600}
+                          height={400}
+                          className="w-full max-w-md object-contain"
+                          priority
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </div>
 
-        {/*  Buttons with reset */}
-        <CarouselPrevious
-          onClick={() => {
-            if (api) {
-              api.scrollPrev();
-              autoplay.reset();
-            }
-          }}
-        />
-        <CarouselNext
-          onClick={() => {
-            if (api) {
-              api.scrollNext();
-              autoplay.reset();
-            }
-          }}
-        />
-      </Carousel>
+          <CarouselPrevious
+            onClick={() => {
+              if (api) {
+                api.scrollPrev();
+                autoplay.reset();
+              }
+            }}
+          />
+          <CarouselNext
+            onClick={() => {
+              if (api) {
+                api.scrollNext();
+                autoplay.reset();
+              }
+            }}
+          />
+        </Carousel>
+      </div>
 
-      {/*  Dot Indicators */}
+      {/* Dots */}
       <div className="flex justify-center gap-2 mt-2">
         {Array.from({ length: count }).map((_, i) => (
           <div
