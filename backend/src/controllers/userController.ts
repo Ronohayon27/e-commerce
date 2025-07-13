@@ -174,3 +174,119 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to delete user" });
   }
 };
+
+/**
+ * Get user's favorite products
+ */
+export const getFavorites = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    const favorites = await userService.getFavoriteProducts(userId);
+    res.status(200).json(favorites);
+  } catch (error) {
+    logger.error("Error fetching favorite products:", error);
+    res.status(500).json({ message: "Failed to fetch favorite products" });
+  }
+};
+
+/**
+ * Add a product to user's favorites
+ */
+export const addToFavorites = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const { productId } = req.params;
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+    
+    const product = await userService.addToFavorites(userId, productId);
+    res.status(200).json({ message: "Product added to favorites", product });
+  } catch (error) {
+    logger.error("Error adding product to favorites:", error);
+    
+    if (error instanceof Error) {
+      if (error.message === "Product not found") {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      if (error.message.includes("already in favorites")) {
+        return res.status(400).json({ message: "Product already in favorites" });
+      }
+    }
+    
+    res.status(500).json({ message: "Failed to add product to favorites" });
+  }
+};
+
+/**
+ * Remove a product from user's favorites
+ */
+export const removeFromFavorites = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const { productId } = req.params;
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+    
+    await userService.removeFromFavorites(userId, productId);
+    res.status(200).json({ message: "Product removed from favorites" });
+  } catch (error) {
+    logger.error("Error removing product from favorites:", error);
+    
+    if (error instanceof Error) {
+      if (error.message === "Product not found") {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      if (error.message === "Product not in favorites") {
+        return res.status(400).json({ message: "Product not in favorites" });
+      }
+    }
+    
+    res.status(500).json({ message: "Failed to remove product from favorites" });
+  }
+};
+
+/**
+ * Check if a product is in user's favorites
+ */
+export const checkFavoriteStatus = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const { productId } = req.params;
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+    
+    const isFavorite = await userService.isProductInFavorites(userId, productId);
+    res.status(200).json({ isFavorite });
+  } catch (error) {
+    logger.error("Error checking favorite status:", error);
+    
+    if (error instanceof Error && error.message === "User not found") {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    res.status(500).json({ message: "Failed to check favorite status" });
+  }
+};

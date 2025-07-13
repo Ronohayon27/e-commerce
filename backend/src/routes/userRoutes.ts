@@ -6,7 +6,11 @@ import {
   updateUser,
   changePassword,
   updateUserRole,
-  deleteUser
+  deleteUser,
+  getFavorites,
+  addToFavorites,
+  removeFromFavorites,
+  checkFavoriteStatus
 } from "../controllers/userController";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { adminMiddleware } from "../middlewares/adminMiddleware";
@@ -23,6 +27,12 @@ router.get("/me", getCurrentUser);
 router.put("/me", validateRequest(updateUserSchema), updateUser);
 router.post("/change-password", validateRequest(changePasswordSchema), changePassword);
 router.delete("/me", deleteUser);
+
+// Favorites routes
+router.get("/favorites", getFavorites);
+router.post("/favorites/:productId", validateIdParam("productId"), addToFavorites);
+router.delete("/favorites/:productId", validateIdParam("productId"), removeFromFavorites);
+router.get("/favorites/:productId/status", validateIdParam("productId"), checkFavoriteStatus);
 
 // Admin-only routes
 router.get("/", adminMiddleware, getAllUsers);

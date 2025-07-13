@@ -173,3 +173,119 @@ export const deleteUser = async (userId: string): Promise<boolean> => {
     throw error;
   }
 };
+
+/**
+ * Get user's favorite products
+ */
+export const getFavoriteProducts = async (userId: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        favorites: true
+      }
+    });
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    return user.favorites;
+  } catch (error) {
+    logger.error(`Error getting favorite products for user ${userId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Add product to user's favorites
+ */
+export const addToFavorites = async (userId: string, productId: string) => {
+  try {
+    // Check if product exists
+    const product = await prisma.product.findUnique({
+      where: { id: productId }
+    });
+    
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    
+    // Add to favorites using the many-to-many relation
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        favorites: {
+          connect: { id: productId }
+        }
+      },
+      include: {
+        favorites: true
+      }
+    });
+    
+    logger.info(`Product ${productId} added to favorites for user ${userId}`);
+    return product;
+  } catch (error) {
+    logger.error(`Error adding product ${productId} to favorites for user ${userId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Remove product from user's favorites
+ */
+export const removeFromFavorites = async (userId: string, productId: string) => {
+  try {
+    // Check if product exists
+    const product = await prisma.product.findUnique({
+      where: { id: productId }
+    });
+    
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    
+    // Remove from favorites using the many-to-many relation
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        favorites: {
+          disconnect: { id: productId }
+        }
+      }
+    });
+    
+    logger.info(`Product ${productId} removed from favorites for user ${userId}`);
+    return true;
+  } catch (error) {
+    logger.error(`Error removing product ${productId} from favorites for user ${userId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Check if a product is in user's favorites
+ */
+export const isProductInFavorites = async (userId: string, productId: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        favorites: {
+          where: { id: productId },
+          select: { id: true }
+        }
+      }
+    });
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    return user.favorites.length > 0;
+  } catch (error) {
+    logger.error(`Error checking if product ${productId} is in favorites for user ${userId}:`, error);
+    throw error;
+  }
+};
