@@ -26,7 +26,8 @@ export const validateRequest = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body);
     if (!result.success) {
-      const errors = z.treeifyError(result.error);
+      logger.info("validateRequest fails ")
+      const errors = result.error.flatten();
       return res.status(400).json({ errors });
     }
 

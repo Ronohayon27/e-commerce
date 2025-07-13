@@ -5,6 +5,8 @@ import morgan from "morgan";
 import logger from "./utils/logger";
 import productRoutes from "./routes/productRoutes";
 import authRoutes from "./routes/authRoutes";
+import cartRoutes from "./routes/cartRoutes";
+import userRoutes from "./routes/userRoutes"
 
 dotenv.config({ quiet: true });
 const currentVersion = "/api/v1";
@@ -25,5 +27,7 @@ app.use(
 
 app.use(`${currentVersion}/products`, productRoutes);
 app.use(`${currentVersion}/auth`, authRoutes);
+app.use(`${currentVersion}/cart`, cartRoutes);
+app.use(`${currentVersion}/users`, userRoutes)
 
 export default app;

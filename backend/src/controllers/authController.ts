@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import logger from "../utils/logger";
 import { loginUser, signupUser, getUserById } from "../services/authService";
+
+
 export const signUp = async (req: Request, res: Response) => {
   logger.info("Signup route called");
   try {
@@ -45,3 +47,24 @@ export const getMe = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    // JWT is stateless, so we can't invalidate the token on the server side directly
+    // The client should remove the token from storage (localStorage/cookies)
+    
+    // Log the logout event
+    const userId = req.user?.id;
+    if (userId) {
+      logger.info(`User ${userId} logged out`);
+    }
+    
+    // Return success message to client
+    res.status(200).json({ 
+      message: "Logout successful",
+    });
+  } catch (error) {
+    logger.error("Logout error:", error);
+    res.status(500).json({ message: "An error occurred during logout" });
+  }
+}
