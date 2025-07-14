@@ -53,54 +53,58 @@ export default function Header({ className }: NavBarProps) {
   return (
     <div
       className={cn(
-        "fixed bottom-0 sm:top-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:pt-6",
+        "fixed bottom-0 sm:top-0 left-0 right-0 z-20 mb-6 sm:pt-6 pointer-events-none",
         className
       )}
     >
-      <div className="flex items-center gap-2 bg-background/60 border border-border backdrop-blur-lg py-1 px-3 rounded-full shadow-lg">
-        <Link
-          href="/"
-          className="relative flex items-center justify-center px-4"
-        >
-          <div className="relative w-6 h-6 sm:w-10 sm:h-10">
-            <Image
-              src="/just-logo.svg"
-              alt="Logo"
-              fill
-              className="object-contain"
+      <div className="flex items-center justify-between bg-background/60 border border-border backdrop-blur-lg py-1 px-3 rounded-full shadow-lg mx-auto w-[70%] pointer-events-auto">
+        {/* Left side: Logo and Search */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="relative flex items-center justify-center px-4"
+          >
+            <div className="relative w-6 h-6 sm:w-10 sm:h-10">
+              <Image
+                src="/just-logo.svg"
+                alt="Logo"
+                fill
+                className="object-contain"
+              />
+            </div>
+            {pathname === "/" && <AnimatedLamp />}
+          </Link>
+          {/* Search */}
+          <div className="hidden md:flex items-center px-3 py-2 rounded-full bg-muted relative">
+            <Search size={16} className="mr-2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="bg-transparent focus:outline-none text-sm placeholder:text-muted-foreground"
             />
+            {pathname === "/search" && <AnimatedLamp />}
           </div>
-          {pathname === "/" && <AnimatedLamp />}
-        </Link>
-        {/* Search */}
-        <div className="hidden md:flex items-center px-3 py-2 rounded-full bg-muted relative">
-          <Search size={16} className="mr-2 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-transparent focus:outline-none text-sm placeholder:text-muted-foreground"
-          />
-          {pathname === "/search" && <AnimatedLamp />}
         </div>
-
-        {/* Logo */}
-
-        {/* Left Item */}
-        <NavLink
-          item={navItems[0]}
-          isMobile={isMobile}
-          isActive={pathname === navItems[0].url}
-        />
-
-        {/* Right Items */}
-        {navItems.slice(1).map((item) => (
+        
+        {/* Right side: Navigation links */}
+        <div className="flex items-center gap-2">
+          {/* Categories */}
           <NavLink
-            key={item.name}
-            item={item}
+            item={navItems[0]}
             isMobile={isMobile}
-            isActive={pathname === item.url}
+            isActive={pathname === navItems[0].url}
           />
-        ))}
+
+          {/* Cart and Login */}
+          {navItems.slice(1).map((item) => (
+            <NavLink
+              key={item.name}
+              item={item}
+              isMobile={isMobile}
+              isActive={pathname === item.url}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -121,7 +125,7 @@ function NavLink({
     <Link
       href={item.url}
       className={cn(
-        "relative cursor-pointer text-sm font-semibold px-4 py-2 rounded-full transition-colors",
+        "relative cursor-pointer text-sm font-semibold px-4 py-2 rounded-full transition-colors ",
         "text-foreground/80 hover:text-primary",
         isActive && "bg-primary/10 text-primary"
       )}
@@ -137,7 +141,7 @@ function AnimatedLamp() {
   return (
     <motion.div
       layoutId="lamp"
-      className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10 bg-transparent"
+      className="absolute inset-0 w-full rounded-full -z-10 bg-transparent"
       initial={false}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >

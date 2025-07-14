@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 
+// Centralized product type definition
 export type MockProduct = {
   id: string;
   name: string;
@@ -11,7 +12,7 @@ export type MockProduct = {
   rating: number;
 };
 
-export function generateMockProduct(): MockProduct {
+export async function generateMockProduct(): Promise<MockProduct> {
   return {
     id: faker.string.uuid(),
     name: faker.commerce.productName(),

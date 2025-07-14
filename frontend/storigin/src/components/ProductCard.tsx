@@ -1,131 +1,96 @@
-"use client";
+"use client"
+import React, { useState } from 'react';
+import { MockProduct } from '@/data/mocks/productsMock';
+import Image from 'next/image';
+import { Heart, ShoppingCart } from 'lucide-react';
 
-import React, { useState } from "react";
-import Image from "next/image";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Heart, Star, StarHalf } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+interface ProductCardProps {
+  product: MockProduct;
+}
 
-export type MockProduct = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-  category: string;
-  inStock: boolean;
-  rating: number;
-};
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  // Add default values if product is undefined
+  const safeProduct = product || {
+    id: '',
+    name: 'Product Name',
+    description: 'Product Description',
+    price: 0,
+    imageUrl: '/images/samsung-tv.webp',
+    category: 'Category',
+    inStock: false,
+    rating: 0
+  };
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
 
-const ProductCard: React.FC<{ product: MockProduct }> = ({ product }) => {
-  const filledStars = Math.floor(product.rating);
-  const hasHalfStar = product.rating % 1 >= 0.5;
-  const totalStars = 5;
+  const handleAddToCart = () => {
+    setIsAddedToCart(true);
+    // Here you would add the actual logic to add the product to the cart
+    setTimeout(() => setIsAddedToCart(false), 1500);
+  };
 
-  const [isFavorited, setIsFavorited] = useState(false);
+  const handleToggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    // Here you would add the actual logic to add/remove from favorites
+  };
 
   return (
-    <Card className="relative flex flex-col justify-between h-full rounded-2xl shadow-md border transition-transform duration-300">
-      {/* Heart Button (not affected by hover scaling) */}
-      <motion.button
-        whileHover={{ scale: 1.15 }}
-        whileTap={{ scale: 0.9 }}
-        className="absolute top-3 right-3 z-10 p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
-        aria-label="Add to favorites"
-        onClick={() => setIsFavorited((prev) => !prev)}
-      >
-        <AnimatePresence mode="wait">
-          {isFavorited ? (
-            <motion.span
-              key="filled"
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1.2, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-            >
-              <Heart className="w-5 h-5 text-red-500 fill-red-500 transition-all duration-100" />
-            </motion.span>
-          ) : (
-            <motion.span
-              key="empty"
-              initial={{ scale: 1.2, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 1.2, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-            >
-              <Heart className="w-5 h-5 text-gray-600 transition-all duration-100" />
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.button>
-
-      {/* Hover scale only this part */}
-      <div className="flex flex-col flex-grow">
-        {/* Product Image */}
-        <div className="relative w-full h-60 overflow-hidden rounded-t-2xl">
-          <Image
-            src={"/images/samsung-tv.webp"}
-            alt={product.name}
-            fill
-            className="object-cover bg-white"
-          />
-        </div>
-
-        {/* Product Info */}
-        <CardContent className="p-4 space-y-2 flex-grow">
-          {/* Name and Price Row */}
-          <div className="flex justify-between items-center gap-4">
-            <h3 className="text-base font-semibold truncate">{product.name}</h3>
-            <p className="text-muted-foreground font-medium text-sm">
-              ${product.price.toFixed(2)}
-            </p>
-          </div>
-
-          {/* Description */}
-          <p className="text-sm text-gray-500 line-clamp-1">
-            {product.description}
-          </p>
-
-          {/* Category */}
-          <p className="text-xs text-muted-foreground">{product.category}</p>
-
-          {/* Stars */}
-          <div className="flex gap-[2px]">
-            {Array.from({ length: totalStars }).map((_, index) => {
-              if (index < filledStars) {
-                return (
-                  <Star
-                    key={index}
-                    className="w-4 h-4 text-yellow-400"
-                    fill="currentColor"
-                  />
-                );
-              } else if (index === filledStars && hasHalfStar) {
-                return (
-                  <StarHalf key={index} className="w-4 h-4 text-yellow-400" />
-                );
-              } else {
-                return <Star key={index} className="w-4 h-4 text-gray-300" />;
-              }
-            })}
-          </div>
-
-          {/* Out of stock message */}
-          <p className="text-xs font-medium h-4 text-yellow-500">
-            {!product.inStock ? "Currently out of stock" : ""}
-          </p>
-        </CardContent>
-
-        {/* Action Buttons - Always at bottom */}
-        <CardFooter className="p-4 pt-0 mt-auto flex flex-col gap-2">
-          <Button variant="secondary" className="w-full">
-            View Details
-          </Button>
-          <Button className="w-full">Add to Cart</Button>
-        </CardFooter>
+    <div 
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full relative z-10"
+      onClick={(e) => {
+        // Prevent event bubbling
+        e.stopPropagation();
+      }}
+    >
+      {/* Image container with relative positioning for favorite button */}
+      <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+        <Image 
+          src={"/images/samsung-tv.webp"} 
+          alt={safeProduct.name}
+          fill
+          style={{ objectFit: 'cover' }}
+          className="transition-transform duration-300 hover:scale-105"
+        />
+        <button 
+          onClick={handleToggleFavorite}
+          className={`absolute top-2 right-2 p-2 rounded-full ${isFavorite ? 'bg-red-500 text-white' : 'bg-white text-gray-500'} hover:bg-red-500 hover:text-white transition-colors duration-300 cursor-pointer`}
+          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        >
+          <Heart size={20} fill={isFavorite ? 'white' : 'none'} />
+        </button>
       </div>
-    </Card>
+      
+      {/* Product info */}
+      <div className="p-4 flex flex-col flex-grow">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">{safeProduct.name}</h3>
+          <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">{safeProduct.category}</span>
+        </div>
+        
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">{safeProduct.description}</p>
+        
+        <div className="flex justify-between items-center mt-auto">
+          <span className="text-lg font-bold text-gray-900">${safeProduct.price.toFixed(2)}</span>
+          <span className={`text-sm ${safeProduct.inStock ? 'text-green-500' : 'text-red-500'}`}>
+            {safeProduct.inStock ? 'In Stock' : 'Out of Stock'}
+          </span>
+        </div>
+        
+        {/* Add to cart button */}
+        <button 
+          onClick={handleAddToCart}
+          disabled={!safeProduct.inStock}
+          className={`mt-3 w-full py-2 px-4 rounded-md flex items-center justify-center transition-colors duration-300 ${safeProduct.inStock 
+            ? (isAddedToCart 
+              ? 'bg-green-500 text-white' 
+              : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer')
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+        >
+          <ShoppingCart size={18} className="mr-2" />
+          {isAddedToCart ? 'Added!' : 'Add to Cart'}
+        </button>
+      </div>
+    </div>
   );
 };
 
