@@ -1,30 +1,40 @@
 import { faker } from "@faker-js/faker";
+import { v4 as uuid } from "uuid";
+import { ProductDTO } from "@shared/types/product";
+import { CartDTO, CartItemDTO } from "@shared/types/cart";
 
-// Centralized product type definition
-export type MockProduct = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-  category: string;
-  inStock: boolean;
-  rating: number;
-};
-
-export async function generateMockProduct(): Promise<MockProduct> {
+// Helper: Generate a mock product
+function generateMockProduct(): ProductDTO {
   return {
-    id: faker.string.uuid(),
+    id: uuid(),
     name: faker.commerce.productName(),
     description: faker.commerce.productDescription(),
-    price: parseFloat(faker.commerce.price({ min: 10, max: 500 })),
-    imageUrl: faker.image.urlLoremFlickr({
-      category: "product",
-      width: 300,
-      height: 300,
-    }),
+    price: parseFloat(faker.commerce.price({ min: 10, max: 300 })),
+    image: faker.image.url(),
     category: faker.commerce.department(),
-    inStock: faker.datatype.boolean(),
-    rating: parseFloat((Math.random() * 5).toFixed(1)),
+    stock: faker.number.int({ min: 0, max: 50 }),
+  };
+}
+
+// Helper: Generate a mock cart item
+function generateMockCartItem(): CartItemDTO {
+  return {
+    id: uuid(),
+    product: generateMockProduct(),
+    quantity: faker.number.int({ min: 1, max: 5 }),
+  };
+}
+
+// Main: Generate a mock cart
+export function generateMockCart(
+  userId = faker.string.uuid(),
+  itemCount = 3
+): CartDTO {
+  const items = Array.from({ length: itemCount }, generateMockCartItem);
+
+  return {
+    id: uuid(),
+    userId,
+    items,
   };
 }
